@@ -1,4 +1,4 @@
-package com.chch.tudoong.ui.main
+package com.chch.tudoong.presentation.ui.main
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -39,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -50,14 +51,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.chch.mycompose.ui.screen.checklist.CheckableRow
-import com.chch.tudoong.ui.component.AnimatedModeButton
+import com.chch.tudoong.presentation.ui.component.AnimatedModeButton
+import com.chch.tudoong.presentation.viewmodel.TudoongViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    viewModel : TudoongViewModel
+) {
+
+    val uiState by viewModel.uiState.collectAsState()
 
     var showInput by remember { mutableStateOf(false) }
     var inputText by remember { mutableStateOf("") }
@@ -66,13 +72,6 @@ fun MainScreen() {
     val today = Calendar.getInstance()
     val formatter = SimpleDateFormat("M월 d일", Locale.KOREAN)
     val formattedDate = formatter.format(today.time)
-
-    val checklist = remember {
-        mutableStateListOf<TudoongItem>().apply {
-            add(TudoongItem("청소하기"))
-            add(TudoongItem("스트레칭하기"))
-        }
-    }
 
     fun resetInputState() {
         showInput = false
@@ -83,15 +82,12 @@ fun MainScreen() {
         if (inputText.isNotBlank()) {
             when (editMode) {
                 EditMode.ADD -> {
-                    checklist.add(0, TudoongItem(inputText))
+                    viewModel.addTodoItem(inputText)
                 }
-
                 EditMode.EDIT -> {
                     // TODO
                 }
-
-                else -> { /* Do Nothing */
-                }
+                else -> { /* Do Nothing */ }
             }
 
         }
@@ -151,6 +147,7 @@ fun MainScreen() {
                 FloatingActionButton(
                     onClick = {
                         showInput = true
+                        editMode = if (editMode != EditMode.ADD) EditMode.ADD else EditMode.VIEW
                     },
                     modifier = Modifier.size(56.dp),
                     shape = CircleShape
@@ -170,23 +167,25 @@ fun MainScreen() {
         ) {
 
             LazyColumn(Modifier.fillMaxWidth()) {
-                itemsIndexed(checklist) { index, item ->
+                val todayTodos = uiState.todayTodos
+                itemsIndexed(todayTodos) { index, item ->
 
                     CheckableRow(
                         item = item,
                         mode = editMode,
                         onCheckedChange = {
-                            checklist[index] = item.copy(checked = it)
+                            viewModel.updateTodoItem(
+                                item.copy(isCompleted = it)
+                            )
                         },
                         onEdit = {
-                            inputText = it.content
+                            inputText = it.text
                             showInput = true
                         },
                         onDelete = {
-                            checklist.remove(it)
+                            viewModel.deleteTodoItem(it)
                         }
                     )
-
                     HorizontalDivider()
                 }
             }

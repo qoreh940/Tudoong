@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -64,4 +66,16 @@ dependencies {
     // Icon
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material.icons.extended)
+
+    // Room (using KSP)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
+    // Kotlin Coroutines support
+    implementation(libs.androidx.room.ktx)
+
+    // Hilt core
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }
