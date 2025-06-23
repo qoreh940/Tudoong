@@ -1,5 +1,6 @@
 package com.chch.tudoong.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chch.tudoong.data.local.database.entities.DailyItem
@@ -10,6 +11,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+const val TAG = "TudoongViewModel"
 
 @HiltViewModel
 class TudoongViewModel @Inject constructor(
@@ -66,9 +69,11 @@ class TudoongViewModel @Inject constructor(
             try {
                 repository.addTodoItem(text)
                 val updatedTodos = repository.getTodayTodos()
-                _uiState.value = _uiState.value.copy(todayTodos = updatedTodos)
+                _uiState.update { it.copy(todayTodos = updatedTodos) }
+                Log.d(TAG, "addTodoItem: ${_uiState.value.todayTodos}")
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(errorMessage = e.message)
+                Log.d(TAG, "addTodoItem: exception : ${_uiState.value}")
             }
         }
     }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.chch.tudoong.data.local.database.entities.TodoItem
 import com.chch.tudoong.presentation.ui.component.AnimatedCheckbox
 import com.chch.tudoong.presentation.ui.main.EditMode
 import com.chch.tudoong.presentation.ui.main.TudoongItem
@@ -25,11 +26,11 @@ import com.chch.tudoong.presentation.ui.main.TudoongItem
 
 @Composable
 fun CheckableRow(
-    item: TudoongItem,
+    item: TodoItem,
     mode: EditMode = EditMode.VIEW,
     onCheckedChange: (Boolean) -> Unit,
-    onDelete: (TudoongItem) -> Unit,
-    onEdit: (TudoongItem) -> Unit
+    onDelete: (TodoItem) -> Unit,
+    onEdit: (TodoItem) -> Unit
 ) {
     val textColor = MaterialTheme.colorScheme.primary
     val disableTextColor = MaterialTheme.colorScheme.onSurface.copy(0.38f)
@@ -39,17 +40,17 @@ fun CheckableRow(
             .fillMaxWidth()
             .height(52.dp)
             .padding(horizontal = 12.dp, vertical = 4.dp)
-            .clickable { onCheckedChange(!item.checked) },
+            .clickable { onCheckedChange(!item.isCompleted) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AnimatedCheckbox(
-            checked = item.checked,
+            checked = item.isCompleted,
             onCheckedChange = null // Row에서 제어할 때 null로 둠!
         )
         Spacer(Modifier.width(4.dp))
         AnimatedCheckItemText(
-            text = item.content,
-            isCompleted = item.checked
+            text = item.text,
+            isCompleted = item.isCompleted
         )
         Spacer(Modifier.weight(1f))
         when (mode) {
