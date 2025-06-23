@@ -2,7 +2,7 @@ package com.chch.tudoong.di
 
 import android.content.Context
 import androidx.room.Room
-import com.chch.tudoong.data.local.TodoDatabase
+import com.chch.tudoong.data.local.TudoongDatabase
 import com.chch.tudoong.data.local.database.dao.DailyDao
 import com.chch.tudoong.data.local.database.dao.MetadataDao
 import com.chch.tudoong.data.local.database.dao.TodoDao
@@ -19,20 +19,20 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): TodoDatabase {
+    fun provideDatabase(@ApplicationContext context: Context): TudoongDatabase {
         return Room.databaseBuilder(
             context,
-            TodoDatabase::class.java,
+            TudoongDatabase::class.java,
             "todo_database"
         ).build()
     }
 
     @Provides
-    fun provideTodoDao(database: TodoDatabase): TodoDao = database.todoDao()
+    fun provideTodoDao(database: TudoongDatabase): TodoDao = database.todoDao()
 
     @Provides
-    fun provideDailyDao(database: TodoDatabase): DailyDao = database.dailyDao()
+    fun provideDailyDao(database: TudoongDatabase): DailyDao = database.dailyDao()
 
     @Provides
-    fun provideMetadataDao(database: TodoDatabase): MetadataDao = database.metadataDao()
+    fun provideMetadataDao(database: TudoongDatabase): MetadataDao = database.metadataDao()
 }

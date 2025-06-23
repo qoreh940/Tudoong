@@ -1,4 +1,4 @@
-package com.chch.tudoong.ui.main
+package com.chch.tudoong.presentation.ui.main
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -50,7 +50,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.chch.mycompose.ui.screen.checklist.CheckableRow
-import com.chch.tudoong.ui.component.AnimatedModeButton
+import com.chch.tudoong.presentation.ui.component.AnimatedModeButton
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

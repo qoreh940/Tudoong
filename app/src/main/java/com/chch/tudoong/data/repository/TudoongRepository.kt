@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TodoRepository @Inject constructor(
+class TudoongRepository @Inject constructor(
     private val todoDao: TodoDao,
     private val dailyDao: DailyDao,
     private val metadataDao: MetadataDao

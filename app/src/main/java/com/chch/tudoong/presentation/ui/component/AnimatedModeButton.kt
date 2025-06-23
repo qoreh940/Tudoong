@@ -1,4 +1,4 @@
-package com.chch.tudoong.ui.component
+package com.chch.tudoong.presentation.ui.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring

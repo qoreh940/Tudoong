@@ -17,7 +17,7 @@ import com.chch.tudoong.data.local.database.entities.TodoItem
     exportSchema = false
 )
 @TypeConverters(Converters::class)
-abstract class TodoDatabase : RoomDatabase() {
+abstract class TudoongDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao
     abstract fun dailyDao(): DailyDao
     abstract fun metadataDao(): MetadataDao

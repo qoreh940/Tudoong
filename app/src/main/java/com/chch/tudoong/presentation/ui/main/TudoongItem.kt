@@ -1,4 +1,4 @@
-package com.chch.tudoong.ui.main
+package com.chch.tudoong.presentation.ui.main
 
 data class TudoongItem(
     val content : String,

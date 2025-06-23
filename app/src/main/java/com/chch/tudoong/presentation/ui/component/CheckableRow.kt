@@ -17,9 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.chch.tudoong.ui.component.AnimatedCheckbox
-import com.chch.tudoong.ui.main.EditMode
-import com.chch.tudoong.ui.main.TudoongItem
+import com.chch.tudoong.presentation.ui.component.AnimatedCheckbox
+import com.chch.tudoong.presentation.ui.main.EditMode
+import com.chch.tudoong.presentation.ui.main.TudoongItem
 
 
 
