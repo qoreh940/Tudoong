@@ -1,4 +1,4 @@
-package com.chch.tudoong.data.local.entities
+package com.chch.tudoong.data.local.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
