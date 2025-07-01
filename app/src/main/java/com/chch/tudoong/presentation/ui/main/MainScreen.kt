@@ -23,11 +23,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material.icons.filled.PunchClock
 import androidx.compose.material.icons.filled.Settings
@@ -78,6 +80,7 @@ fun MainScreen(
     val formattedDate = formatter.format(today.time)
 
     var showDailyBottomSheet by remember { mutableStateOf(false) }
+    var showYesterdayBottomSheet by remember { mutableStateOf(false) }
 
     fun resetInputState() {
         showInput = false
@@ -198,10 +201,11 @@ fun MainScreen(
 
                     AnimatedModeButton(
                         isActive = false,
-                        icon = Icons.Default.PunchClock,
-                        contentDescription = "Reset Time",
+                        icon = Icons.AutoMirrored.Filled.ListAlt,
+                        contentDescription = "Yesterday List",
                         onClick = {
-                            // TODO
+                            resetInputState()
+                            showYesterdayBottomSheet = true
                         }
                     )
                 }
@@ -310,6 +314,18 @@ fun MainScreen(
             ) {
                 showDailyBottomSheet = false
             }
+        }
+
+        if(showYesterdayBottomSheet){
+            YesterdayListBottomSheet(
+                list = uiState.yesterdayTodos,
+                add = {
+                    viewModel.addTodoItem(it)
+                }
+            ) {
+                showYesterdayBottomSheet = false
+            }
+
         }
 
     }
