@@ -29,9 +29,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.ModeEdit
-import androidx.compose.material.icons.filled.PunchClock
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -74,6 +72,7 @@ fun MainScreen(
     var showInput by remember { mutableStateOf(false) }
     var inputText by remember { mutableStateOf("") }
     var editMode by remember { mutableStateOf(EditMode.VIEW) }
+    var editUUID by remember { mutableStateOf<String?>(null) }
 
     val today = Calendar.getInstance()
     val formatter = SimpleDateFormat("M월 d일", Locale.KOREAN)
@@ -85,6 +84,7 @@ fun MainScreen(
     fun resetInputState() {
         showInput = false
         inputText = ""
+        editUUID = null
     }
 
     fun handleChecklistInput() {
@@ -95,7 +95,11 @@ fun MainScreen(
                 }
 
                 EditMode.EDIT -> {
-                    // TODO
+                    editUUID?.let {
+                        viewModel.updateTodoItem(
+                            uiState.todayTodos.first { it.id == editUUID }.copy(text = inputText)
+                        )
+                    }
                 }
 
                 else -> { /* Do Nothing */
@@ -234,6 +238,7 @@ fun MainScreen(
                         },
                         onEdit = {
                             inputText = it.text
+                            editUUID = it.id
                             showInput = true
                         },
                         onDelete = {
@@ -316,7 +321,7 @@ fun MainScreen(
             }
         }
 
-        if(showYesterdayBottomSheet){
+        if (showYesterdayBottomSheet) {
             YesterdayListBottomSheet(
                 list = uiState.yesterdayTodos,
                 add = {
