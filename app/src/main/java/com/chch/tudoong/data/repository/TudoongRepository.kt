@@ -1,7 +1,6 @@
 package com.chch.tudoong.data.repository
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.chch.tudoong.data.local.database.dao.DailyDao
 import com.chch.tudoong.data.local.database.dao.MetadataDao
@@ -11,7 +10,6 @@ import com.chch.tudoong.data.local.database.entities.DailyItem
 import com.chch.tudoong.data.local.database.entities.TodoItem
 import com.chch.tudoong.domain.model.TodoType
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale

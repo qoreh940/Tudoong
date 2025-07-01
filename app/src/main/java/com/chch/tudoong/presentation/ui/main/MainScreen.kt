@@ -82,6 +82,7 @@ fun MainScreen(
     var showYesterdayBottomSheet by remember { mutableStateOf(false) }
 
     fun resetInputState() {
+        editMode = EditMode.VIEW
         showInput = false
         inputText = ""
         editUUID = null
