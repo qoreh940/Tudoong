@@ -1,6 +1,7 @@
 package com.chch.tudoong.data.repository
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.chch.tudoong.data.local.database.dao.DailyDao
 import com.chch.tudoong.data.local.database.dao.MetadataDao
@@ -80,11 +81,11 @@ class TudoongRepository @Inject constructor(
             else -> false
         }
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         if (needsReset) {
             performReset(today)
         }
+
     }
 
     private suspend fun performReset(today: String) {
@@ -92,11 +93,10 @@ class TudoongRepository @Inject constructor(
         val metadata = metadataDao.getMetadata() ?: AppMetadata()
         val yesterday = getYesterdayDate(today) // 어제 날짜를 계산하는 함수
 
-
         if (metadata.todayDate == yesterday) {
             todoDao.moveTodayToYesterday()
         } else if (metadata.todayDate.isNotEmpty()) {
-            todoDao.deleteAllTodosByType(TodoType.TODAY)
+            todoDao.deleteAllTodos()
         }
 
         val dailyItems = dailyDao.getAllDailyItems()
