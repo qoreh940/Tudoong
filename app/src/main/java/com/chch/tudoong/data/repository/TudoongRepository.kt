@@ -66,7 +66,6 @@ class TudoongRepository @Inject constructor(
         metadataDao.updateResetHour(hour)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun checkAndResetIfNeeded() {
         val metadata = getMetadata()
         val today = dateFormat.format(Date())
