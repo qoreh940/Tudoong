@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,20 +22,18 @@ import androidx.compose.ui.unit.dp
 import com.chch.tudoong.data.local.database.entities.TodoItem
 import com.chch.tudoong.presentation.ui.component.AnimatedCheckbox
 import com.chch.tudoong.presentation.ui.main.EditMode
-import com.chch.tudoong.presentation.ui.main.TudoongItem
-
 
 
 @Composable
 fun CheckableRow(
     item: TodoItem,
+    isDailyItem: Boolean,
     mode: EditMode = EditMode.VIEW,
     onCheckedChange: (Boolean) -> Unit,
     onDelete: (TodoItem) -> Unit,
-    onEdit: (TodoItem) -> Unit
+    onEdit: (TodoItem) -> Unit,
+    onToggleDaily: (String) -> Unit
 ) {
-    val textColor = MaterialTheme.colorScheme.primary
-    val disableTextColor = MaterialTheme.colorScheme.onSurface.copy(0.38f)
 
     Row(
         modifier = Modifier
@@ -73,6 +73,18 @@ fun CheckableRow(
                     Icon(
                         Icons.Default.Delete,
                         contentDescription = "Delete",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            EditMode.VIEW -> {
+                IconButton(
+                    onClick = { onToggleDaily.invoke(item.text) }
+                ) {
+                    Icon(
+                        if (isDailyItem) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Add a daily item",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }

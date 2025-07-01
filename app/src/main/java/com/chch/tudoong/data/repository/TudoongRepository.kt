@@ -1,5 +1,7 @@
 package com.chch.tudoong.data.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.chch.tudoong.data.local.database.dao.DailyDao
 import com.chch.tudoong.data.local.database.dao.MetadataDao
 import com.chch.tudoong.data.local.database.dao.TodoDao
@@ -64,6 +66,7 @@ class TudoongRepository @Inject constructor(
         metadataDao.updateResetHour(hour)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun checkAndResetIfNeeded() {
         val metadata = getMetadata()
         val today = dateFormat.format(Date())
@@ -76,16 +79,24 @@ class TudoongRepository @Inject constructor(
             else -> false
         }
 
+
         if (needsReset) {
             performReset(today)
         }
+
     }
 
     private suspend fun performReset(today: String) {
-        // 1. 오늘의 할일을 어제로 이동
-        todoDao.moveTodayToYesterday()
 
-        // 2. 데일리 아이템들을 오늘의 할일로 추가
+        val metadata = metadataDao.getMetadata() ?: AppMetadata()
+        val yesterday = getYesterdayDate(today) // 어제 날짜를 계산하는 함수
+
+        if (metadata.todayDate == yesterday) {
+            todoDao.moveTodayToYesterday()
+        } else if (metadata.todayDate.isNotEmpty()) {
+            todoDao.deleteAllTodos()
+        }
+
         val dailyItems = dailyDao.getAllDailyItems()
         val todayTodos = dailyItems.map { dailyItem ->
             TodoItem(
@@ -98,8 +109,23 @@ class TudoongRepository @Inject constructor(
             todoDao.insertTodos(todayTodos)
         }
 
-        // 4. 메타데이터 업데이트
+        // 메타데이터 업데이트
         metadataDao.updateLastResetDate(today)
         metadataDao.updateTodayDate(today)
+    }
+
+    private fun getYesterdayDate(today: String): String? {
+        return try {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val todayDate = dateFormat.parse(today)
+
+            val calendar = Calendar.getInstance()
+            calendar.time = todayDate
+            calendar.add(Calendar.DAY_OF_MONTH, -1)
+
+            dateFormat.format(calendar.time)
+        } catch (e: Exception) {
+            null
+        }
     }
 }

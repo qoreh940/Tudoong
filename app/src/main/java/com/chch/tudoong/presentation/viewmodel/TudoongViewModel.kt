@@ -65,6 +65,8 @@ class TudoongViewModel @Inject constructor(
     }
 
     fun addTodoItem(text: String) {
+        if(uiState.value.todayTodos.any{ it.text == text}) return
+
         viewModelScope.launch {
             try {
                 repository.addTodoItem(text)
@@ -107,6 +109,8 @@ class TudoongViewModel @Inject constructor(
     }
 
     fun addDailyItem(text: String) {
+        if (uiState.value.dailyItems.any { it.text == text }) return
+
         viewModelScope.launch {
             try {
                 repository.addDailyItem(text)

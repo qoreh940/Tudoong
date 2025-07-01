@@ -34,6 +34,9 @@ interface TodoDao {
     @Query("DELETE FROM todo_items WHERE type = :type")
     suspend fun deleteAllTodosByType(type: TodoType)
 
+    @Query("DELETE FROM todo_items")
+    suspend fun deleteAllTodos()
+
     @Query("UPDATE todo_items SET type = 'YESTERDAY' WHERE type = 'TODAY'")
     suspend fun moveTodayToYesterday()
 }
