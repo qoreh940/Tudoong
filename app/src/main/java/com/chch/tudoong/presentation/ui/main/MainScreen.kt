@@ -56,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFirst
 import com.chch.mycompose.ui.screen.checklist.CheckableRow
 import com.chch.tudoong.presentation.ui.component.AnimatedModeButton
+import com.chch.tudoong.presentation.ui.component.SettingItem
+import com.chch.tudoong.presentation.ui.component.SettingsPopover
 import com.chch.tudoong.presentation.viewmodel.TudoongViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -80,6 +82,8 @@ fun MainScreen(
 
     var showDailyBottomSheet by remember { mutableStateOf(false) }
     var showYesterdayBottomSheet by remember { mutableStateOf(false) }
+
+    var showSettingsPopover by remember { mutableStateOf(false) }
 
     fun resetInputState() {
         editMode = EditMode.VIEW
@@ -129,11 +133,27 @@ fun MainScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "setting icon"
-                        )
+
+                    Box {
+                        IconButton(onClick = { showSettingsPopover = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = "setting icon"
+                            )
+                        }
+
+                        if (showSettingsPopover) {
+                            SettingsPopover(
+                                listOf(
+                                    SettingItem(
+                                        label = "리셋 타임 설정",
+                                        onClick = { showSettingsPopover = false })
+                                )
+                            ) {
+                                showSettingsPopover = false
+                            }
+                        }
+
                     }
                 }
             )
