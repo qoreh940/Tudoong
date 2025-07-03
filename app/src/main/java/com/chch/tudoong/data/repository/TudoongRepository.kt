@@ -1,7 +1,5 @@
 package com.chch.tudoong.data.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.chch.tudoong.data.local.database.dao.DailyDao
 import com.chch.tudoong.data.local.database.dao.MetadataDao
 import com.chch.tudoong.data.local.database.dao.TodoDao
@@ -73,11 +71,9 @@ class TudoongRepository @Inject constructor(
 
         // 리셋이 필요한지 확인
         val needsReset = when {
-            metadata.todayDate != today -> true // 날짜가 바뀜
-            metadata.lastResetDate != today && currentHour >= metadata.resetHour -> true // 리셋 시간 지남
+            metadata.lastResetDate != today && currentHour >= metadata.resetHour -> true // 날짜 바뀜 & 리셋 시간 지남
             else -> false
         }
-
 
         if (needsReset) {
             performReset(today)
