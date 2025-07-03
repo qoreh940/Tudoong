@@ -60,8 +60,8 @@ class TudoongRepository @Inject constructor(
         dailyDao.deleteDailyItem(dailyItem)
     }
 
-    suspend fun updateResetHour(hour: Int) {
-        metadataDao.updateResetHour(hour)
+    suspend fun updateResetHour(hour: Int, min: Int) {
+        metadataDao.updateResetHour(hour, min)
     }
 
     suspend fun checkAndResetIfNeeded() {

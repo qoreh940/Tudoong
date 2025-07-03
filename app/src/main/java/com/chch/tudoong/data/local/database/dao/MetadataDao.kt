@@ -14,8 +14,8 @@ interface MetadataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdateMetadata(metadata: AppMetadata)
 
-    @Query("UPDATE app_metadata SET resetHour = :hour WHERE id = 1")
-    suspend fun updateResetHour(hour: Int)
+    @Query("UPDATE app_metadata SET resetHour = :hour, resetMin = :min WHERE id = 1")
+    suspend fun updateResetHour(hour: Int, min: Int)
 
     @Query("UPDATE app_metadata SET lastResetDate = :date WHERE id = 1")
     suspend fun updateLastResetDate(date: String)
