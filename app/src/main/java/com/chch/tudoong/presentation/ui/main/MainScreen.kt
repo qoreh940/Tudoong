@@ -42,7 +42,10 @@ import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,9 +59,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFirst
 import com.chch.mycompose.ui.screen.checklist.CheckableRow
 import com.chch.tudoong.presentation.ui.component.AnimatedModeButton
+import com.chch.tudoong.presentation.ui.component.ResetTimeDialog
+import com.chch.tudoong.presentation.ui.component.SettingItem
+import com.chch.tudoong.presentation.ui.component.SettingsPopover
 import com.chch.tudoong.presentation.viewmodel.TudoongViewModel
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import com.chch.tudoong.utils.DateUtils
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,12 +79,29 @@ fun MainScreen(
     var editMode by remember { mutableStateOf(EditMode.VIEW) }
     var editUUID by remember { mutableStateOf<String?>(null) }
 
-    val today = Calendar.getInstance()
-    val formatter = SimpleDateFormat("M월 d일", Locale.KOREAN)
-    val formattedDate = formatter.format(today.time)
+    val displayDate = DateUtils.formatDateWithDayOfWeek(uiState.metadata.todayDate)
 
     var showDailyBottomSheet by remember { mutableStateOf(false) }
     var showYesterdayBottomSheet by remember { mutableStateOf(false) }
+
+    var showSettingsPopover by remember { mutableStateOf(false) }
+    var showResetTimeSettingDlg by remember { mutableStateOf(false) }
+
+//    val timePickerState = rememberTimePickerState(
+//        initialHour = uiState.metadata.resetHour,
+//        initialMinute = uiState.metadata.resetMin,
+//        is24Hour = true
+//    )
+
+    var timePickerState by remember { mutableStateOf<TimePickerState?>(null) }
+
+    LaunchedEffect(uiState.metadata.resetHour, uiState.metadata.resetMin) {
+        timePickerState = TimePickerState(
+            initialHour = uiState.metadata.resetHour,
+            initialMinute = uiState.metadata.resetMin,
+            is24Hour = true
+        )
+    }
 
     fun resetInputState() {
         editMode = EditMode.VIEW
@@ -119,21 +141,55 @@ fun MainScreen(
             MediumTopAppBar(
                 title = {
                     Column(Modifier.padding(horizontal = 10.dp)) {
-                        Text(
-                            formattedDate,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                        Row {
+                            Text(
+                                displayDate,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Text(
+                                text = "Reset Time: ${uiState.metadata.resetHour}:${
+                                    String.format(
+                                        Locale.US,
+                                        "%02d",
+                                        uiState.metadata.resetMin
+                                    )
+                                }",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier
+                                    .align(Alignment.Bottom)
+                                    .padding(bottom = 3.dp, start = 2.dp)
+                            )
+                        }
                         Spacer(Modifier.height(10.dp))
                         HorizontalDivider(thickness = 4.dp)
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "setting icon"
-                        )
+
+                    Box {
+                        IconButton(onClick = { showSettingsPopover = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = "setting icon"
+                            )
+                        }
+
+                        if (showSettingsPopover) {
+                            SettingsPopover(
+                                listOf(
+                                    SettingItem(
+                                        label = "Change Reset Time",
+                                        onClick = {
+                                            showSettingsPopover = false
+                                            showResetTimeSettingDlg = true
+                                        })
+                                )
+                            ) {
+                                showSettingsPopover = false
+                            }
+                        }
+
                     }
                 }
             )
@@ -333,6 +389,22 @@ fun MainScreen(
             }
 
         }
+
+        timePickerState?.let { tps ->
+            if (showResetTimeSettingDlg) {
+                ResetTimeDialog(
+                    onCancel = { showResetTimeSettingDlg = false },
+                    onConfirm = {
+                        showResetTimeSettingDlg = false
+                        viewModel.updateResetHour(tps.hour, tps.minute)
+                    },
+                    content = {
+                        TimePicker(state = tps)
+                    }
+                )
+            }
+        }
+
 
     }
 }

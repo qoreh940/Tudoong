@@ -146,10 +146,10 @@ class TudoongViewModel @Inject constructor(
         }
     }
 
-    fun updateResetHour(hour: Int) {
+    fun updateResetHour(hour: Int, min: Int) {
         viewModelScope.launch {
             try {
-                repository.updateResetHour(hour)
+                repository.updateResetHour(hour, min)
                 val updatedMetadata = repository.getMetadata()
                 _uiState.value = _uiState.value.copy(metadata = updatedMetadata)
             } catch (e: Exception) {
