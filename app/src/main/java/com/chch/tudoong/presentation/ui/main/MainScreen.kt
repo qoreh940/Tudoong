@@ -43,8 +43,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -86,11 +87,21 @@ fun MainScreen(
     var showSettingsPopover by remember { mutableStateOf(false) }
     var showResetTimeSettingDlg by remember { mutableStateOf(false) }
 
-    val timePickerState = rememberTimePickerState(
-        initialHour = uiState.metadata.resetHour,
-        initialMinute = uiState.metadata.resetMin,
-        is24Hour = true
-    )
+//    val timePickerState = rememberTimePickerState(
+//        initialHour = uiState.metadata.resetHour,
+//        initialMinute = uiState.metadata.resetMin,
+//        is24Hour = true
+//    )
+
+    var timePickerState by remember { mutableStateOf<TimePickerState?>(null) }
+
+    LaunchedEffect(uiState.metadata.resetHour, uiState.metadata.resetMin) {
+        timePickerState = TimePickerState(
+            initialHour = uiState.metadata.resetHour,
+            initialMinute = uiState.metadata.resetMin,
+            is24Hour = true
+        )
+    }
 
     fun resetInputState() {
         editMode = EditMode.VIEW
@@ -379,18 +390,21 @@ fun MainScreen(
 
         }
 
-        if (showResetTimeSettingDlg) {
-            ResetTimeDialog(
-                onCancel = { showResetTimeSettingDlg = false },
-                onConfirm = {
-                    showResetTimeSettingDlg = false
-                    viewModel.updateResetHour(timePickerState.hour, timePickerState.minute)
-                },
-                content = {
-                    TimePicker(state = timePickerState)
-                }
-            )
+        timePickerState?.let { tps ->
+            if (showResetTimeSettingDlg) {
+                ResetTimeDialog(
+                    onCancel = { showResetTimeSettingDlg = false },
+                    onConfirm = {
+                        showResetTimeSettingDlg = false
+                        viewModel.updateResetHour(tps.hour, tps.minute)
+                    },
+                    content = {
+                        TimePicker(state = tps)
+                    }
+                )
+            }
         }
+
 
     }
 }
