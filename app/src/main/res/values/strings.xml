@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Tudoong</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="done">Done</string>
+    <string name="missed">Missed</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="daily">Daily</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="yesterday_tasks">Yesterday\'s tasks</string>
+    <string name="empty_yesterday_todo_message">You didn’t come by yesterday,\nbut that’s perfectly fine :)</string>
+    <string name="input_today_task_hint">Type today’s task</string>
+    <string name="add_daily_list_hint"><![CDATA[
+    Click the ♡ icon to add a daily list!\n\n
+    Items added to the daily list will automatically be included in today\'s tasks at the reset time each day.
+    ]]></string>
 </resources>

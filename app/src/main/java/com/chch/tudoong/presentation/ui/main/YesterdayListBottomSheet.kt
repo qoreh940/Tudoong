@@ -1,6 +1,5 @@
 package com.chch.tudoong.presentation.ui.main
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,14 +22,14 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.chch.tudoong.data.local.database.entities.DailyItem
+import com.chch.tudoong.R
 import com.chch.tudoong.data.local.database.entities.TodoItem
-import java.text.SimpleDateFormat
+import com.chch.tudoong.utils.DateUtils
 import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,11 +42,10 @@ fun YesterdayListBottomSheet(
 
     val completedList = list.filter { it.isCompleted }
     val notCompletedList = list.filter { !it.isCompleted }
-    var formattedDate : String? = null
+    var formattedDate: String? = null
     list.firstOrNull()?.let {
         val date = Date(it.createdAt)
-        val formatter = SimpleDateFormat("M월 d일", Locale.KOREAN)
-        formattedDate= formatter.format(date)
+        formattedDate = DateUtils.formatDateWithDayOfWeek(date)
     }
 
     ModalBottomSheet(
@@ -62,16 +59,22 @@ fun YesterdayListBottomSheet(
         ) {
             Spacer(Modifier.height(20.dp))
 
-            if(formattedDate != null){
-                Text(text=formattedDate, style = MaterialTheme.typography.headlineSmall)
-                Text(text="지난 TODOs", style = MaterialTheme.typography.bodyMedium)
+            if (formattedDate != null) {
+                Text(text = formattedDate, style = MaterialTheme.typography.headlineSmall)
+                Text(
+                    text = stringResource(R.string.yesterday_tasks),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             } else {
-                Text(text = "어제는 들르지 않으셨군요! 그래도 괜찮습니다:)")
+                Text(
+                    text = stringResource(R.string.empty_yesterday_todo_message),
+                    textAlign = TextAlign.Center
+                )
             }
 
-            if(completedList.isNotEmpty()){
+            if (completedList.isNotEmpty()) {
                 Text(
-                    "완료한 TODOs",
+                    stringResource(R.string.done),
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
@@ -109,10 +112,10 @@ fun YesterdayListBottomSheet(
             }
 
 
-            if(notCompletedList.isNotEmpty()){
+            if (notCompletedList.isNotEmpty()) {
                 Spacer(Modifier.height(10.dp))
                 Text(
-                    "완료하지 못 한 TODOs",
+                    stringResource(R.string.missed),
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
