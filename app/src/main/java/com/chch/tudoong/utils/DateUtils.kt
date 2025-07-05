@@ -1,7 +1,9 @@
 package com.chch.tudoong.utils
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 object DateUtils {
 
@@ -22,32 +24,47 @@ object DateUtils {
         }
     }
 
+    private fun formatDateInternal(date: Date): String {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        val month = calendar.get(Calendar.MONTH) + 1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val dayOfWeek = when (calendar.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.SUNDAY -> "SUN"
+            Calendar.MONDAY -> "MON"
+            Calendar.TUESDAY -> "TUE"
+            Calendar.WEDNESDAY -> "WED"
+            Calendar.THURSDAY -> "THU"
+            Calendar.FRIDAY -> "FRI"
+            Calendar.SATURDAY -> "SAT"
+            else -> ""
+        }
+
+        return "$month/$day ($dayOfWeek)"
+    }
+
+    // String 버전
     fun formatDateWithDayOfWeek(dateString: String): String {
         return try {
             if (dateString.isEmpty()) return ""
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val date = dateFormat.parse(dateString)
+            val date = dateFormat.parse(dateString) ?: return dateString
 
-            val calendar = Calendar.getInstance()
-            calendar.time = date
-
-            val month = calendar.get(Calendar.MONTH) + 1
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-            val dayOfWeek = when (calendar.get(Calendar.DAY_OF_WEEK)) {
-                Calendar.SUNDAY -> "SUN"
-                Calendar.MONDAY -> "MON"
-                Calendar.TUESDAY -> "TUE"
-                Calendar.WEDNESDAY -> "WED"
-                Calendar.THURSDAY -> "THU"
-                Calendar.FRIDAY -> "FRI"
-                Calendar.SATURDAY -> "SAT"
-                else -> ""
-            }
-
-            "$month/$day($dayOfWeek)"
+            formatDateInternal(date)
         } catch (e: Exception) {
             dateString
+        }
+    }
+
+    // Date 객체 버전
+    fun formatDateWithDayOfWeek(date: Date?): String {
+        return try {
+            if (date == null) return ""
+            formatDateInternal(date)
+        } catch (e: Exception) {
+            ""
         }
     }
 

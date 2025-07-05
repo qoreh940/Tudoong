@@ -22,7 +22,10 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.chch.tudoong.R
 import com.chch.tudoong.data.local.database.entities.DailyItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +48,14 @@ fun DailyBottomSheet(
         ) {
             Spacer(Modifier.height(20.dp))
 
+            if (list.isEmpty()) {
+                Text(
+                    stringResource(R.string.add_daily_list_hint),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(12.dp)
+                )
+            }
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             )

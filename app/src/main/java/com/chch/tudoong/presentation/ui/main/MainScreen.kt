@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,11 +22,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material.icons.filled.Settings
@@ -53,11 +51,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFirst
 import com.chch.mycompose.ui.screen.checklist.CheckableRow
+import com.chch.tudoong.R
 import com.chch.tudoong.presentation.ui.component.AnimatedModeButton
 import com.chch.tudoong.presentation.ui.component.ResetTimeDialog
 import com.chch.tudoong.presentation.ui.component.SettingItem
@@ -195,9 +197,7 @@ fun MainScreen(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-            ) {
+            BottomAppBar() {
                 // LEFT BUTTONS
                 Row(
                     modifier = Modifier.weight(2f),
@@ -205,22 +205,26 @@ fun MainScreen(
                 ) {
                     AnimatedModeButton(
                         isActive = editMode == EditMode.EDIT,
-                        icon = Icons.Default.ModeEdit,
+                        icon = rememberVectorPainter(Icons.Default.ModeEdit),
+                        label = stringResource(R.string.edit),
                         contentDescription = "Edit Mode Button",
                         onClick = {
                             editMode =
                                 if (editMode != EditMode.EDIT) EditMode.EDIT else EditMode.VIEW
-                        }
+                        },
+                        modifier = Modifier.weight(1f)
                     )
 
                     AnimatedModeButton(
                         isActive = editMode == EditMode.DELETE,
-                        icon = Icons.Default.Delete,
+                        icon = rememberVectorPainter(Icons.Default.Delete),
+                        label = stringResource(R.string.delete),
                         contentDescription = "Delete Mode Button",
                         onClick = {
                             editMode =
                                 if (editMode != EditMode.DELETE) EditMode.DELETE else EditMode.VIEW
-                        }
+                        },
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -235,8 +239,8 @@ fun MainScreen(
                         }
                     },
                     modifier = Modifier
-                        .size(56.dp)
-                        .weight(1f),
+                        .align(Alignment.Top)
+                        .size(52.dp),
                     shape = CircleShape
                 ) {
                     Icon(
@@ -252,22 +256,26 @@ fun MainScreen(
                 ) {
                     AnimatedModeButton(
                         isActive = false,
-                        icon = Icons.Default.Favorite,
+                        icon = painterResource(id = R.drawable.ic_daily_list),
+                        label = stringResource(R.string.daily),
                         contentDescription = "Daily list",
                         onClick = {
                             resetInputState()
                             showDailyBottomSheet = true
-                        }
+                        },
+                        modifier = Modifier.weight(1f)
                     )
 
                     AnimatedModeButton(
                         isActive = false,
-                        icon = Icons.AutoMirrored.Filled.ListAlt,
+                        icon = rememberVectorPainter(Icons.Filled.History),
+                        label = stringResource(R.string.yesterday),
                         contentDescription = "Yesterday List",
                         onClick = {
                             resetInputState()
                             showYesterdayBottomSheet = true
-                        }
+                        },
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -331,7 +339,7 @@ fun MainScreen(
                         value = inputText,
                         placeholder = {
                             Text(
-                                "Please enter a checklist item",
+                                stringResource(R.string.input_today_task_hint),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.6f)
                             )
                         },
