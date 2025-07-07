@@ -69,6 +69,7 @@ import com.chch.tudoong.presentation.ui.component.AnimatedModeButton
 import com.chch.tudoong.presentation.ui.component.ResetTimeDialog
 import com.chch.tudoong.presentation.ui.component.SettingItem
 import com.chch.tudoong.presentation.ui.component.SettingsPopover
+import com.chch.tudoong.presentation.ui.component.TdCheckboxState
 import com.chch.tudoong.presentation.viewmodel.TudoongViewModel
 import com.chch.tudoong.utils.DateUtils
 import java.util.Locale
@@ -316,10 +317,26 @@ fun MainScreen(
                         item = item,
                         isDailyItem = isDailyItem(item.text),
                         mode = editMode,
-                        onCheckedChange = {
+                        onCheckStateChange = { state ->
                             viewModel.updateTodoItem(
-                                item.copy(isCompleted = it)
+                                when (state) {
+                                    TdCheckboxState.NONE -> item.copy(
+                                        isCompleted = false,
+                                        isMissed = false
+                                    )
+
+                                    TdCheckboxState.DONE -> item.copy(
+                                        isCompleted = true,
+                                        isMissed = false
+                                    )
+
+                                    TdCheckboxState.MISSED -> item.copy(
+                                        isCompleted = false,
+                                        isMissed = true
+                                    )
+                                }
                             )
+
                         },
                         onEdit = {
                             inputText = it.text

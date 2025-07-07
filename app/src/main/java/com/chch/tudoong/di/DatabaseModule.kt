@@ -24,7 +24,8 @@ object DatabaseModule {
             context,
             TudoongDatabase::class.java,
             "todo_database"
-        ).build()
+        ).addMigrations(TudoongDatabase.MIGRATION_1_2)
+        .build()
     }
 
     @Provides

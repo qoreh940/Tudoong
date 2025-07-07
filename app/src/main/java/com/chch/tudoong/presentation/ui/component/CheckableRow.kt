@@ -15,12 +15,15 @@ import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.chch.tudoong.data.local.database.entities.TodoItem
 import com.chch.tudoong.presentation.ui.component.AnimatedCheckbox
+import com.chch.tudoong.presentation.ui.component.TdCheckboxState
+import com.chch.tudoong.presentation.ui.component.TudoongCheckbox
 import com.chch.tudoong.presentation.ui.main.EditMode
 
 
@@ -29,7 +32,7 @@ fun CheckableRow(
     item: TodoItem,
     isDailyItem: Boolean,
     mode: EditMode = EditMode.VIEW,
-    onCheckedChange: (Boolean) -> Unit,
+    onCheckStateChange: (TdCheckboxState) -> Unit,
     onDelete: (TodoItem) -> Unit,
     onEdit: (TodoItem) -> Unit,
     onToggleDaily: (String) -> Unit
@@ -40,17 +43,19 @@ fun CheckableRow(
             .fillMaxWidth()
             .height(52.dp)
             .padding(horizontal = 12.dp, vertical = 4.dp)
-            .clickable { onCheckedChange(!item.isCompleted) },
+            .clickable{ onCheckStateChange.invoke(item.checkboxState.next())},
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AnimatedCheckbox(
-            checked = item.isCompleted,
-            onCheckedChange = null // Row에서 제어할 때 null로 둠!
+        TudoongCheckbox(
+            state = item.checkboxState,
+            onStateChange = onCheckStateChange
         )
-        Spacer(Modifier.width(4.dp))
+        Spacer(Modifier.width(8.dp))
+
         AnimatedCheckItemText(
             text = item.text,
-            isCompleted = item.isCompleted
+            checkboxState = item.checkboxState,
+            modifier = Modifier.weight(1f)
         )
         Spacer(Modifier.weight(1f))
         when (mode) {
