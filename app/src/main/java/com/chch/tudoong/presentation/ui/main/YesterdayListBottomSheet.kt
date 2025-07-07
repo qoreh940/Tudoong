@@ -41,7 +41,7 @@ fun YesterdayListBottomSheet(
     val sheetState = rememberModalBottomSheetState()
 
     val completedList = list.filter { it.isCompleted }
-    val notCompletedList = list.filter { !it.isCompleted }
+    val missedList = list.filter { it.isMissed || !it.isCompleted }
     var formattedDate: String? = null
     list.firstOrNull()?.let {
         val date = Date(it.createdAt)
@@ -112,7 +112,7 @@ fun YesterdayListBottomSheet(
             }
 
 
-            if (notCompletedList.isNotEmpty()) {
+            if (missedList.isNotEmpty()) {
                 Spacer(Modifier.height(10.dp))
                 Text(
                     stringResource(R.string.missed),
@@ -125,7 +125,7 @@ fun YesterdayListBottomSheet(
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    itemsIndexed(notCompletedList) { index, item ->
+                    itemsIndexed(missedList) { index, item ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()

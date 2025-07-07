@@ -39,4 +39,7 @@ interface TodoDao {
 
     @Query("UPDATE todo_items SET type = 'YESTERDAY' WHERE type = 'TODAY'")
     suspend fun moveTodayToYesterday()
+
+    @Query("UPDATE todo_items SET isMissed = 1 WHERE isCompleted = 0 AND isMissed = 0")
+    suspend fun markUncompletedAsMissed()
 }
