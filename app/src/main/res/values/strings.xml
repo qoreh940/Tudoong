@@ -16,4 +16,9 @@
     Click the ♡ icon to add a daily list!\n\n
     Items added to the daily list will automatically be included in today\'s tasks at the reset time each day.
     ]]></string>
+
+    <string name="empty_field_not_added">Nothing was added. The field was empty.</string>
+    <string name="task_deleted">Task deleted successfully.</string>
+    <string name="added_to_dailylist">Added to your daily list.</string>
+    <string name="removed_from_dailylist">Removed from your daily list.</string>
 </resources>

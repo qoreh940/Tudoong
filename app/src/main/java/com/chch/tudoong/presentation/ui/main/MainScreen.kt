@@ -1,5 +1,6 @@
 package com.chch.tudoong.presentation.ui.main
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -38,6 +39,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
@@ -52,6 +56,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -73,7 +78,7 @@ import java.util.Locale
 fun MainScreen(
     viewModel: TudoongViewModel
 ) {
-
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
     var showInput by remember { mutableStateOf(false) }
@@ -89,13 +94,23 @@ fun MainScreen(
     var showSettingsPopover by remember { mutableStateOf(false) }
     var showResetTimeSettingDlg by remember { mutableStateOf(false) }
 
-//    val timePickerState = rememberTimePickerState(
-//        initialHour = uiState.metadata.resetHour,
-//        initialMinute = uiState.metadata.resetMin,
-//        is24Hour = true
-//    )
-
     var timePickerState by remember { mutableStateOf<TimePickerState?>(null) }
+
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    var snackBarMsg by remember { mutableStateOf("") }
+
+    LaunchedEffect(snackBarMsg) {
+        Log.d("TESTTEST", "TESTTEST :: $snackBarMsg, ${snackBarMsg.isNotBlank()}")
+        if (snackBarMsg.isNotBlank()) {
+            val result = snackBarHostState.showSnackbar(snackBarMsg)
+
+            Log.d("TESTTEST", "result :: $result")
+            if (result == SnackbarResult.Dismissed) {
+                snackBarMsg = ""
+            }
+        }
+    }
 
     LaunchedEffect(uiState.metadata.resetHour, uiState.metadata.resetMin) {
         timePickerState = TimePickerState(
@@ -131,6 +146,8 @@ fun MainScreen(
                 }
             }
 
+        } else {
+            snackBarMsg = context.getString(R.string.empty_field_not_added)
         }
         resetInputState()
         editMode = EditMode.VIEW
@@ -139,6 +156,9 @@ fun MainScreen(
     fun isDailyItem(text: String): Boolean = uiState.dailyItems.any { it.text == text }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackBarHostState)
+        },
         topBar = {
             MediumTopAppBar(
                 title = {
@@ -308,12 +328,16 @@ fun MainScreen(
                         },
                         onDelete = {
                             viewModel.deleteTodoItem(it)
+                            snackBarMsg = context.getString(R.string.task_deleted)
                         },
                         onToggleDaily = { text ->
-                            if (isDailyItem(text))
+                            if (isDailyItem(text)) {
                                 viewModel.deleteDailyItem(uiState.dailyItems.fastFirst { it.text == text })
-                            else
+                                snackBarMsg = context.getString(R.string.removed_from_dailylist)
+                            } else {
                                 viewModel.addDailyItem(text)
+                                snackBarMsg = context.getString(R.string.added_to_dailylist)
+                            }
                         }
                     )
                     HorizontalDivider()
@@ -321,7 +345,7 @@ fun MainScreen(
             }
 
 
-            // Add a CheckItem
+            // Add a Item
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = showInput,
