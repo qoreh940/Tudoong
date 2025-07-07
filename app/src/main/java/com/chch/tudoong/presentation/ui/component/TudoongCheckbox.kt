@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -80,7 +80,7 @@ fun TudoongCheckbox(
             }
             TdCheckboxState.MISSED -> {
                 Icon(
-                    imageVector = Icons.Default.Block,
+                    imageVector = Icons.Default.Remove,
                     contentDescription = "실패",
                     tint = colors.missedIconColor,
                     modifier = Modifier.size(size * 0.7f)
@@ -128,9 +128,9 @@ object TriStateCheckboxDefaults {
         checkedBorderColor: Color = MaterialTheme.colorScheme.primary,
         checkedBackgroundColor: Color = MaterialTheme.colorScheme.primary,
         checkedIconColor: Color = MaterialTheme.colorScheme.onPrimary,
-        missedBorderColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+        missedBorderColor: Color = MaterialTheme.colorScheme.outline,
         missedBackgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-        missedIconColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
+        missedIconColor: Color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
     ): TriStateCheckboxColors {
         return TriStateCheckboxColors(
             uncheckedBorderColor = uncheckedBorderColor,
