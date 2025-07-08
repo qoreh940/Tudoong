@@ -24,13 +24,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,16 +44,21 @@ import androidx.compose.ui.unit.dp
 import com.chch.tudoong.R
 import com.chch.tudoong.data.local.database.entities.TodoItem
 import com.chch.tudoong.utils.DateUtils
+import kotlinx.coroutines.launch
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YesterdayListBottomSheet(
     list: List<TodoItem> = listOf(),
+    canAdd: (String) -> Boolean,
     add: (String) -> Unit,
     dismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val completedList = list.filter { it.isCompleted }
     val missedList = list.filter { it.isMissed || !it.isCompleted }
@@ -58,128 +68,152 @@ fun YesterdayListBottomSheet(
         formattedDate = DateUtils.formatDateWithDayOfWeek(date)
     }
 
+    fun addItem(item: TodoItem) {
+        if (canAdd(item.text)) {
+            add.invoke(item.text)
+            scope.launch {
+                snackBarHostState.showSnackbar(context.getString(R.string.yesterday_to_added_today))
+            }
+        } else {
+            scope.launch {
+                snackBarHostState.showSnackbar(context.getString(R.string.todo_already_exist))
+            }
+        }
+    }
+
     ModalBottomSheet(
         modifier = Modifier.fillMaxHeight(),
         sheetState = sheetState,
         onDismissRequest = { dismiss.invoke() }
     ) {
-        Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.height(20.dp))
+        Box(Modifier.fillMaxSize()) {
+            Column(
+                Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(Modifier.height(20.dp))
 
-            if (formattedDate != null) {
-                Text(text = formattedDate, style = MaterialTheme.typography.headlineSmall)
-                Text(
-                    text = stringResource(R.string.yesterday_tasks),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            } else {
-                Text(
-                    text = stringResource(R.string.empty_yesterday_todo_message),
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            if (completedList.isNotEmpty()) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CheckboxIcon(
-                        size = 20.dp,
-                        icon = Icons.Default.Check,
-                        iconDescription = "DONE"
-                    )
-                    Spacer(Modifier.width(5.dp))
+                if (formattedDate != null) {
+                    Text(text = formattedDate, style = MaterialTheme.typography.headlineSmall)
                     Text(
-                        stringResource(R.string.done),
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Start)
+                        text = stringResource(R.string.yesterday_tasks),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.empty_yesterday_todo_message),
+                        textAlign = TextAlign.Center
+                    )
                 }
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth()
-                )
-                {
-                    itemsIndexed(completedList) { index, item ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(52.dp)
-                                .padding(horizontal = 12.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "- " + item.text)
-                            Spacer(Modifier.weight(1f))
-                            IconButton(
-                                onClick = {
-                                    add.invoke(item.text)
-                                }
+                if (completedList.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CheckboxIcon(
+                            size = 20.dp,
+                            icon = Icons.Default.Check,
+                            iconDescription = "DONE"
+                        )
+                        Spacer(Modifier.width(5.dp))
+                        Text(
+                            stringResource(R.string.done),
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+                        itemsIndexed(completedList) { index, item ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp)
+                                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    Icons.Default.Add,
-                                    contentDescription = "add to today",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
+                                Text(text = "- " + item.text)
+                                Spacer(Modifier.weight(1f))
+                                IconButton(
+                                    onClick = {
+                                        addItem(item)
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.Add,
+                                        contentDescription = "add to today",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
 
 
-            if (missedList.isNotEmpty()) {
-                Spacer(Modifier.height(10.dp))
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CheckboxIcon(
-                        size = 20.dp,
-                        icon = Icons.Default.Remove,
-                        iconDescription = "MISSED"
-                    )
-                    Spacer(Modifier.width(5.dp))
-                    Text(
-                        stringResource(R.string.missed),
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Start)
-                }
+                if (missedList.isNotEmpty()) {
+                    Spacer(Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CheckboxIcon(
+                            size = 20.dp,
+                            icon = Icons.Default.Remove,
+                            iconDescription = "MISSED"
+                        )
+                        Spacer(Modifier.width(5.dp))
+                        Text(
+                            stringResource(R.string.missed),
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Start
+                        )
+                    }
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    itemsIndexed(missedList) { index, item ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(52.dp)
-                                .padding(horizontal = 12.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "- " + item.text)
-                            Spacer(Modifier.weight(1f))
-                            IconButton(
-                                onClick = {
-                                    add.invoke(item.text)
-                                }
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        itemsIndexed(missedList) { index, item ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(52.dp)
+                                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    Icons.Default.Add,
-                                    contentDescription = "add to today",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
+                                Text(text = "- " + item.text)
+                                Spacer(Modifier.weight(1f))
+                                IconButton(
+                                    onClick = {
+                                        addItem(item)
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.Add,
+                                        contentDescription = "add to today",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
                             }
                         }
                     }
                 }
+
             }
 
+            SnackbarHost(
+                hostState = snackBarHostState
+            )
         }
+
     }
 }
 
@@ -187,9 +221,9 @@ fun YesterdayListBottomSheet(
 fun CheckboxIcon(
     size: Dp = 24.dp,
     icon: ImageVector,
-    iconDescription : String,
+    iconDescription: String,
     color: Color = MaterialTheme.colorScheme.outline
-){
+) {
     Box(
         modifier = Modifier
             .size(size)

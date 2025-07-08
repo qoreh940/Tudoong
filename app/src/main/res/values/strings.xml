@@ -24,4 +24,5 @@
     <string name="added_to_dailylist">Added to your routines.</string>
     <string name="removed_from_dailylist">Removed from your routines.</string>
     <string name="todo_already_exist">A todo with the same content exists.</string>
+    <string name="yesterday_to_added_today">Added to today’s todo.</string>
 </resources>

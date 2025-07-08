@@ -149,8 +149,9 @@ fun MainScreen(
             }
 
         } else {
-            snackBarMsg = if(editMode == EditMode.ADD) context.getString(R.string.empty_field_not_added)
-                        else context.getString(R.string.empty_field_not_saved)
+            snackBarMsg =
+                if (editMode == EditMode.ADD) context.getString(R.string.empty_field_not_added)
+                else context.getString(R.string.empty_field_not_saved)
         }
         resetInputState()
         editMode = EditMode.VIEW
@@ -347,7 +348,6 @@ fun MainScreen(
                         },
                         onDelete = {
                             viewModel.deleteTodoItem(it)
-                            snackBarMsg = context.getString(R.string.task_deleted)
                         },
                         onToggleDaily = { text ->
                             if (isDailyItem(text)) {
@@ -432,6 +432,9 @@ fun MainScreen(
         if (showYesterdayBottomSheet) {
             YesterdayListBottomSheet(
                 list = uiState.yesterdayTodos,
+                canAdd = {
+                    !uiState.todayTodos.contain(it)
+                },
                 add = {
                     viewModel.addTodoItem(it)
                 }
