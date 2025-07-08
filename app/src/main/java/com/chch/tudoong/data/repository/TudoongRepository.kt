@@ -89,6 +89,7 @@ class TudoongRepository @Inject constructor(
         val yesterday = DateUtils.getYesterdayDate(today) // 어제 날짜를 계산하는 함수
 
         if (metadata.todayDate == yesterday) {
+            todoDao.deleteAllTodosByType(TodoType.YESTERDAY)
             todoDao.markUncompletedAsMissed()
             todoDao.moveTodayToYesterday()
         } else if (metadata.todayDate.isNotEmpty()) {
