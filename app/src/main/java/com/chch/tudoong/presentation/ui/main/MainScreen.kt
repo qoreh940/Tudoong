@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFirst
 import com.chch.mycompose.ui.screen.checklist.CheckableRow
 import com.chch.tudoong.R
+import com.chch.tudoong.data.local.database.entities.TodoItem
 import com.chch.tudoong.presentation.ui.component.AnimatedModeButton
 import com.chch.tudoong.presentation.ui.component.ResetTimeDialog
 import com.chch.tudoong.presentation.ui.component.SettingItem
@@ -71,7 +72,6 @@ import com.chch.tudoong.presentation.ui.component.SettingsPopover
 import com.chch.tudoong.presentation.ui.component.TdCheckboxState
 import com.chch.tudoong.presentation.viewmodel.TudoongViewModel
 import com.chch.tudoong.utils.DateUtils
-import com.chch.tudoong.utils.logd
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,9 +127,13 @@ fun MainScreen(
 
     fun handleChecklistInput() {
         if (inputText.isNotBlank()) {
+
             when (editMode) {
                 EditMode.ADD -> {
-                    viewModel.addTodoItem(inputText)
+                    if (!uiState.todayTodos.contain(inputText))
+                        viewModel.addTodoItem(inputText)
+                    else
+                        snackBarMsg = context.getString(R.string.todo_already_exist)
                 }
 
                 EditMode.EDIT -> {
@@ -145,7 +149,8 @@ fun MainScreen(
             }
 
         } else {
-            snackBarMsg = context.getString(R.string.empty_field_not_added)
+            snackBarMsg = if(editMode == EditMode.ADD) context.getString(R.string.empty_field_not_added)
+                        else context.getString(R.string.empty_field_not_saved)
         }
         resetInputState()
         editMode = EditMode.VIEW
@@ -453,4 +458,8 @@ fun MainScreen(
 
 
     }
+}
+
+fun List<TodoItem>.contain(text: String): Boolean {
+    return this.any { todo -> todo.text == text }
 }
