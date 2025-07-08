@@ -7,18 +7,19 @@
     <string name="missed">Missed</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="daily">Daily</string>
+    <string name="routines">Routines</string>
     <string name="yesterday">Yesterday</string>
     <string name="yesterday_tasks">Yesterday\'s tasks</string>
     <string name="empty_yesterday_todo_message">You didn’t come by yesterday,\nbut that’s perfectly fine :)</string>
     <string name="input_today_task_hint">Type today’s task</string>
-    <string name="add_daily_list_hint"><![CDATA[
-    Click the ♡ icon to add a daily list!\n\n
-    Items added to the daily list will automatically be included in today\'s tasks at the reset time each day.
+    <string name="add_routines_hint"><![CDATA[
+    Click the ♡ icon to add a routine!\n\n
+    Build your daily routine. These tasks will automatically appear every day.
     ]]></string>
+    <string name="routines_description">Tasks added here will automatically appear \nin your daily list at reset time.</string>
 
     <string name="empty_field_not_added">Nothing was added. The field was empty.</string>
     <string name="task_deleted">Task deleted successfully.</string>
-    <string name="added_to_dailylist">Added to your daily list.</string>
-    <string name="removed_from_dailylist">Removed from your daily list.</string>
+    <string name="added_to_dailylist">Added to your routines.</string>
+    <string name="removed_from_dailylist">Removed from your routines.</string>
 </resources>
