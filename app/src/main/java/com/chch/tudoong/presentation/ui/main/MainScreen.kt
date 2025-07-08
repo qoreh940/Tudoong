@@ -102,11 +102,8 @@ fun MainScreen(
     var snackBarMsg by remember { mutableStateOf("") }
 
     LaunchedEffect(snackBarMsg) {
-        Log.d("TESTTEST", "TESTTEST :: $snackBarMsg, ${snackBarMsg.isNotBlank()}")
         if (snackBarMsg.isNotBlank()) {
             val result = snackBarHostState.showSnackbar(snackBarMsg)
-
-            Log.d("TESTTEST", "result :: $result")
             if (result == SnackbarResult.Dismissed) {
                 snackBarMsg = ""
             }
@@ -163,7 +160,7 @@ fun MainScreen(
         topBar = {
             MediumTopAppBar(
                 title = {
-                    Column(Modifier.padding(horizontal = 10.dp)) {
+                    Column() {
                         Row {
                             Text(
                                 displayDate,
@@ -185,7 +182,6 @@ fun MainScreen(
                             )
                         }
                         Spacer(Modifier.height(10.dp))
-                        HorizontalDivider(thickness = 4.dp)
                     }
                 },
                 actions = {
@@ -277,8 +273,8 @@ fun MainScreen(
                 ) {
                     AnimatedModeButton(
                         isActive = false,
-                        icon = painterResource(id = R.drawable.ic_daily_list),
-                        label = stringResource(R.string.daily),
+                        icon = painterResource(id = R.drawable.ic_routines),
+                        label = stringResource(R.string.routines),
                         contentDescription = "Daily list",
                         onClick = {
                             resetInputState()
@@ -308,6 +304,7 @@ fun MainScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
+            HorizontalDivider(thickness = 4.dp, modifier = Modifier.padding(horizontal = 10.dp))
             // Tudoong List
             LazyColumn(Modifier.fillMaxWidth()) {
                 val todayTodos = uiState.todayTodos
@@ -417,7 +414,7 @@ fun MainScreen(
         }
 
         if (showDailyBottomSheet) {
-            DailyBottomSheet(
+            RoutinesBottomSheet(
                 list = uiState.dailyItems,
                 delete = {
                     viewModel.deleteDailyItem(it)

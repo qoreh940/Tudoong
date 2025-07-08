@@ -30,7 +30,7 @@ import com.chch.tudoong.data.local.database.entities.DailyItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailyBottomSheet(
+fun RoutinesBottomSheet(
     list: List<DailyItem> = listOf(),
     delete: (DailyItem) -> Unit,
     dismiss: () -> Unit
@@ -50,10 +50,25 @@ fun DailyBottomSheet(
 
             if (list.isEmpty()) {
                 Text(
-                    stringResource(R.string.add_daily_list_hint),
+                    stringResource(R.string.add_routines_hint),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .padding(12.dp)
+                )
+            } else {
+                Text(
+                    stringResource(R.string.routines),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                )
+                Text(
+                    stringResource(R.string.routines_description),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
                 )
             }
             LazyColumn(

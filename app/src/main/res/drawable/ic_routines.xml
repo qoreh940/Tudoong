@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:viewportHeight="48" android:viewportWidth="48" android:width="24dp">
+      
+    <path android:fillColor="#000000" android:pathData="M17.295,18.222C18.997,16.569 21.729,16.597 23.397,18.283L30.041,25.001L23.877,30.985L17.233,24.267C15.565,22.581 15.593,19.874 17.295,18.222Z"/>
+      
+    <path android:fillColor="#000000" android:pathData="M30.777,18.395C32.439,20.087 32.402,22.794 30.694,24.441L23.891,31L17.872,24.872L24.675,18.313C26.383,16.666 29.115,16.703 30.777,18.395Z"/>
+      
+    <path android:fillColor="#00000000" android:pathData="M5,20L5,8" android:strokeColor="#000000" android:strokeWidth="4"/>
+      
+    <path android:fillColor="#00000000" android:pathData="M3,10L42,10" android:strokeColor="#000000" android:strokeWidth="4"/>
+      
+    <path android:fillColor="#000000" android:pathData="M42.939,11.061C43.525,11.646 44.475,11.646 45.061,11.061C45.646,10.475 45.646,9.525 45.061,8.939L42.939,11.061ZM44,10L45.061,8.939L39.061,2.939L38,4L36.939,5.061L42.939,11.061L44,10Z"/>
+      
+    <path android:fillColor="#000000" android:pathData="M45.061,11.061C45.646,10.475 45.646,9.525 45.061,8.939C44.475,8.354 43.525,8.354 42.939,8.939L45.061,11.061ZM44,10L42.939,8.939L36.939,14.939L38,16L39.061,17.061L45.061,11.061L44,10Z"/>
+      
+    <path android:fillColor="#00000000" android:pathData="M43,28L43,40" android:strokeColor="#000000" android:strokeWidth="4"/>
+      
+    <path android:fillColor="#00000000" android:pathData="M45,38L6,38" android:strokeColor="#000000" android:strokeWidth="4"/>
+      
+    <path android:fillColor="#000000" android:pathData="M5.061,36.939C4.475,36.354 3.525,36.354 2.939,36.939C2.354,37.525 2.354,38.475 2.939,39.061L5.061,36.939ZM4,38L2.939,39.061L8.939,45.061L10,44L11.061,42.939L5.061,36.939L4,38Z"/>
+      
+    <path android:fillColor="#000000" android:pathData="M2.939,36.939C2.354,37.525 2.354,38.475 2.939,39.061C3.525,39.646 4.475,39.646 5.061,39.061L2.939,36.939ZM4,38L5.061,39.061L11.061,33.061L10,32L8.939,30.939L2.939,36.939L4,38Z"/>
+    
+</vector>
