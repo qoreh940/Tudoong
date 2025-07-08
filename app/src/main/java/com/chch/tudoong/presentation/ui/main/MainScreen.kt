@@ -1,6 +1,5 @@
 package com.chch.tudoong.presentation.ui.main
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -72,6 +71,7 @@ import com.chch.tudoong.presentation.ui.component.SettingsPopover
 import com.chch.tudoong.presentation.ui.component.TdCheckboxState
 import com.chch.tudoong.presentation.viewmodel.TudoongViewModel
 import com.chch.tudoong.utils.DateUtils
+import com.chch.tudoong.utils.logd
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
