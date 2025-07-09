@@ -19,7 +19,10 @@
     <string name="routines_description">Tasks added here will automatically appear \nin your daily list at reset time.</string>
 
     <string name="empty_field_not_added">Nothing was added. The field was empty.</string>
+    <string name="empty_field_not_saved">Field is empty. Changes not saved.</string>
     <string name="task_deleted">Task deleted successfully.</string>
     <string name="added_to_dailylist">Added to your routines.</string>
     <string name="removed_from_dailylist">Removed from your routines.</string>
+    <string name="todo_already_exist">A todo with the same content exists.</string>
+    <string name="yesterday_to_added_today">Added to today’s todo.</string>
 </resources>
