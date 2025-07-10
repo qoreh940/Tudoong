@@ -8,11 +8,7 @@ import com.chch.tudoong.data.local.database.entities.DailyItem
 import com.chch.tudoong.data.local.database.entities.TodoItem
 import com.chch.tudoong.domain.model.TodoType
 import com.chch.tudoong.utils.DateUtils
-import com.chch.tudoong.utils.logd
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -23,7 +19,7 @@ import javax.inject.Singleton
 class TudoongRepository @Inject constructor(
     private val todoDao: TodoDao,
     private val dailyDao: DailyDao,
-    private val metadataDao: MetadataDao
+    private val metadataDao: MetadataDao,
 ) {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
@@ -72,30 +68,33 @@ class TudoongRepository @Inject constructor(
     suspend fun checkAndResetIfNeeded() {
         val metadata = getMetadata()
         val today = dateFormat.format(Date())
-        val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        val currentMin = Calendar.getInstance().get(Calendar.MINUTE)
+
+        val todayDate = dateFormat.parse(today)!!
+        val lastResetDate = dateFormat.parse(metadata.lastResetDate)!!
+        val diffDays = ((todayDate.time - lastResetDate.time) / (1000 * 60 * 60 * 24)).toInt()
 
         // 리셋이 필요한지 확인
         val needsReset = when {
-            // 2일 이상 차이나면 무조건 리셋
-            ChronoUnit.DAYS.between(LocalDate.parse(metadata.lastResetDate), LocalDate.parse(today)) >= 2 -> {
-                true
-            }
+            // 데이터 비정상, 보수적인 처리 필요
+            diffDays < 0 -> true
 
-            // 하루 차이이고 현재 시간이 리셋 시간을 지났으면 리셋
-            metadata.lastResetDate != today -> {
-                val currentTime = LocalTime.of(currentHour, currentMin)
-                val resetTime = LocalTime.of(metadata.resetHour, metadata.resetMin)
-                currentTime >= resetTime // isAfter 대신 >= 사용 (정확히 리셋 시간이면 리셋)
+            // 2일 이상 차이나면 무조건 리셋
+            diffDays >= 2 -> true
+
+            // 하루 차이이고, 현재 시간이 리셋 시간을 지났으면 리셋
+            diffDays == 1 -> {
+                val now = Calendar.getInstance()
+                val currentTime = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
+                val resetTime = metadata.resetHour * 60 + metadata.resetMin
+                currentTime >= resetTime
             }
 
             else -> false
         }
-        
+
         if (needsReset) {
             performReset(today)
         }
-
     }
 
     private suspend fun performReset(today: String) {
