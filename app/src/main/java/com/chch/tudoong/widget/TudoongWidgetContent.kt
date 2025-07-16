@@ -8,9 +8,9 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.enabled
-import androidx.glance.appwidget.lazy.LazyColumn
-import androidx.glance.appwidget.lazy.items
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -26,6 +26,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import com.chch.tudoong.MainActivity
 import com.chch.tudoong.R
 
 @SuppressLint("RestrictedApi")
@@ -34,9 +35,12 @@ fun TudoongWidgetContent(
     todos: List<TodoWidgetItem>,
     todayDate: String,
 ) {
+    val openAppAction = actionStartActivity<MainActivity>()
 
     Column(
-        modifier = GlanceModifier.fillMaxSize(),
+        modifier = GlanceModifier
+            .fillMaxSize()
+            .clickable(openAppAction),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -49,15 +53,16 @@ fun TudoongWidgetContent(
                 .fillMaxWidth()
                 .background(Color.LightGray)
                 .padding(start = 15.dp, top = 5.dp, bottom = 5.dp)
+
         )
-        LazyColumn(
+        Column(
             modifier = GlanceModifier
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(10.dp)
         ) {
 
-            items(todos) { item ->
+            todos.forEach { item ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -95,19 +100,18 @@ fun TudoongWidgetContent(
             }
 
             if (todos.isEmpty()) {
-                item {
-                    Text(
-                        text = "There are no tasks for today.",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            color = ColorProvider(R.color.gray)
-                        ),
-                        modifier = GlanceModifier.padding(top = 16.dp)
-                    )
-                }
+                Text(
+                    text = "There are no tasks for today.",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = ColorProvider(R.color.gray)
+                    ),
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
+                )
+
             }
         }
     }
-
-
 }
