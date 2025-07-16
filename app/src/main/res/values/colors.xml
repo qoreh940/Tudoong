@@ -8,4 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FF888888</color>
+
+    <color name="outline">#FF75796C</color>
+    <color name="primary">#FF253D05</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="surface_variant">#FFE1E4D5</color>
+    <color name="on_surface_variant">#FF34382D</color>
+    <color name="on_surface_variant_alpha60">#9934382D</color>
 </resources>
