@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -82,4 +83,10 @@ dependencies {
     // Glance for Widget
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
+
+
+    //생명주기 이벤트
+    implementation(libs.androidx.lifecycle.process)
+
+    implementation(libs.kotlinx.serialization.json)
 }
